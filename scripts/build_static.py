@@ -27,6 +27,7 @@ def build(root):
         if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
         if artwork.is_file(): shutil.copyfile(artwork, output / artwork.name)
         assets = root / "assets"
+        if assets.is_symlink(): raise ValueError("Public assets directory must not be a symlink")
         if assets.is_dir():
             (output / "assets").mkdir()
             for asset in assets.glob("*.webp"):
