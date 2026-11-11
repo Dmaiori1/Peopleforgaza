@@ -32,4 +32,13 @@ class CheckerTests(unittest.TestCase):
     def test_insecure_link(self):
         self.assertTrue(any("insecure" in e for e in self.run_case('<a href="http://example.test">Link</a>')))
 
+    def test_inline_event_handlers_require_review(self):
+        self.assertTrue(any("event handler" in e for e in self.run_case('<img alt="" onerror="alert(1)">')))
+    def test_meta_refresh_requires_review(self):
+        self.assertTrue(any("refresh" in e for e in self.run_case('<meta http-equiv="refresh" content="0;url=https://example.test">')))
+    def test_active_embeds_require_review(self):
+        for markup in ('<object data="https://example.test"></object>', '<embed src="https://example.test">'):
+            with self.subTest(markup=markup):
+                self.assertTrue(any("embedded" in e for e in self.run_case(markup)))
+
 if __name__ == "__main__": unittest.main()
