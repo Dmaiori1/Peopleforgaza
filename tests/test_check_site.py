@@ -13,6 +13,8 @@ class CheckerTests(unittest.TestCase):
             root = Path(directory)
             (root / "index.html").write_text('<!doctype html><html '+html_attrs+'><main id="main"><h1>Example</h1>'+extra+'</main></html>', encoding="utf-8")
             return checker.check(root)
+    def test_malformed_url_reports_error(self):
+        self.assertTrue(any("malformed link" in e for e in self.run_case('<a href="https://[broken">Broken</a>')))
     def test_valid_page(self):
         self.assertEqual(self.run_case('<a href="#main">Content</a>'), [])
     def test_broken_fragment(self):
