@@ -31,6 +31,9 @@ class CheckerTests(unittest.TestCase):
     def test_arabic_direction(self):
         self.assertTrue(any("RTL" in e for e in self.run_case(html_attrs='lang="ar"')))
         self.assertEqual(self.run_case(html_attrs='lang="ar" dir="rtl"'), [])
+    def test_regional_arabic_requires_rtl(self):
+        self.assertTrue(any("RTL" in e for e in self.run_case(html_attrs='lang="ar-PS"')))
+        self.assertEqual(self.run_case(html_attrs='lang="ar-PS" dir="rtl"'), [])
     def test_missing_alt(self):
         self.assertTrue(any("missing alt" in e for e in self.run_case('<img src="picture.png">')))
     def test_insecure_link(self):
