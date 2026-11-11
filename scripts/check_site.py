@@ -31,6 +31,7 @@ class Page(HTMLParser):
             self.errors.append("data collection control requires safety review: " + tag)
         if tag == "script":
             self.errors.append("script requires privacy/security review")
+        if tag == "img" and "src" in a: self.links.append(a["src"])
         if tag == "img" and "alt" not in a:
             self.errors.append("image missing alt")
         if tag in ("iframe", "object", "embed"):
