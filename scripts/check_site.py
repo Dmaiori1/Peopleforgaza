@@ -14,6 +14,10 @@ class Page(HTMLParser):
         self.feed(source)
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if any(name.startswith("on") for name in a):
+            self.errors.append("inline event handler requires privacy/security review")
+        if tag == "meta" and a.get("http-equiv", "").lower() == "refresh":
+            self.errors.append("automatic refresh/redirect requires review")
         if tag == "html":
             self.lang, self.direction = a.get("lang"), a.get("dir")
         if "id" in a:
@@ -29,7 +33,7 @@ class Page(HTMLParser):
             self.errors.append("script requires privacy/security review")
         if tag == "img" and "alt" not in a:
             self.errors.append("image missing alt")
-        if tag == "iframe":
+        if tag in ("iframe", "object", "embed"):
             self.errors.append("embedded third-party content requires review")
 
 def check(root):
