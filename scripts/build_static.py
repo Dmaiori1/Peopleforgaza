@@ -8,6 +8,8 @@ from check_site import check
 def build(root):
     root = Path(root).resolve()
     pages = ("index.html", "ar.html", "privacy.html", "editorial-policy.html")
+    if (root / "funding-transparency.html").exists() or (root / "funding-transparency.html").is_symlink():
+        pages += ("funding-transparency.html",)
     linked = [name for name in pages if (root / name).is_symlink()]
     if linked: raise ValueError("Public pages must not be symlinks: " + ", ".join(linked))
     missing = [name for name in pages if not (root / name).is_file()]
@@ -44,4 +46,4 @@ if __name__ == "__main__":
         print("Build failed:", error, file=sys.stderr)
         sys.exit(1)
     print("Validated static package:", output)
-    print("Contains four public HTML pages. No hosting, payments or collection enabled.")
+    print("Contains reviewed public pages and assets. No hosting, payments or collection enabled.")
