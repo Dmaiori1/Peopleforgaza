@@ -51,7 +51,11 @@ def check(root):
         if page.main != 1: errors.append(name + ": expected one main landmark")
         if page.h1 != 1: errors.append(name + ": expected one h1")
         for href in page.links:
-            url = urlsplit(href)
+            try:
+                url = urlsplit(href)
+            except ValueError:
+                errors.append(name + ": malformed link URL")
+                continue
             if url.scheme or url.netloc:
                 if url.scheme not in ("https", "mailto", "tel"):
                     errors.append(name + ": unsupported or insecure link scheme")
