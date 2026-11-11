@@ -34,3 +34,13 @@ python3 -m unittest discover -s tests
 ```
 
 The checker validates root HTML pages for local links/fragments, one main landmark and heading, document languages/Arabic direction, image alt attributes, and insecure link schemes. Forms, input controls, scripts, and iframes fail review checks while submissions remain closed. This is a static regression guard, not a security certification or browser/screen-reader test. External URL availability, contrast, layout, and translation accuracy require separate review. It does not contact visitors or collect data.
+
+## Prepare a deployment package
+
+```sh
+python3 scripts/build_static.py
+```
+
+This validates the source pages and creates `dist/` containing only `index.html`, `ar.html`, `privacy.html`, and `editorial-policy.html`. It validates links again in the staged output and refuses to overwrite an existing `dist/`. Review and remove old output explicitly before rebuilding. No dependencies, hosting calls, payment services, or collection endpoints are enabled. Future public assets must be added to the reviewed allowlist before they are used.
+
+Deploy only the staged directory after separately configuring the correct People for Gaza host. The VIII Site project ID must not be reused for this project. External Google Fonts still require connectivity; browser/device and translation reviews remain necessary before launch.
