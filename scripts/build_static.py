@@ -8,6 +8,8 @@ from check_site import check
 def build(root):
     root = Path(root).resolve()
     pages = ("index.html", "ar.html", "privacy.html", "editorial-policy.html")
+    linked = [name for name in pages if (root / name).is_symlink()]
+    if linked: raise ValueError("Public pages must not be symlinks: " + ", ".join(linked))
     missing = [name for name in pages if not (root / name).is_file()]
     if missing: raise ValueError("Missing required pages: " + ", ".join(missing))
     errors = check(root)
