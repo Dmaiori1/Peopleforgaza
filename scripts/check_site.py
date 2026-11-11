@@ -47,7 +47,7 @@ def check(root):
         name = path.name
         errors.extend(name + ": " + e for e in page.errors)
         if not page.lang: errors.append(name + ": missing document language")
-        if page.lang == "ar" and page.direction != "rtl":
+        if (page.lang or "").lower().split("-")[0] == "ar" and page.direction != "rtl":
             errors.append(name + ": Arabic document needs RTL")
         if page.main != 1: errors.append(name + ": expected one main landmark")
         if page.h1 != 1: errors.append(name + ": expected one h1")
