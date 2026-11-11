@@ -1,0 +1,12 @@
+{
+  "status": "disabled",
+  "provider": "unselected",
+  "currency": "USD",
+  "platform_fee_basis_points": 500,
+  "beneficiary_share_basis_points": 9500,
+  "processing_fee_policy": "undecided",
+  "payouts_enabled": false,
+  "checkout_enabled": false,
+  "requires_provider_approval": true,
+  "requires_legal_review": true
+}
