@@ -44,3 +44,11 @@ python3 scripts/build_static.py
 This validates the source pages and creates `dist/` containing only `index.html`, `ar.html`, `privacy.html`, and `editorial-policy.html`. It validates links again in the staged output and refuses to overwrite an existing `dist/`. Review and remove old output explicitly before rebuilding. No dependencies, hosting calls, payment services, or collection endpoints are enabled. Future public assets must be added to the reviewed allowlist before they are used.
 
 Deploy only the staged directory after separately configuring the correct People for Gaza host. The VIII Site project ID must not be reused for this project. External Google Fonts still require connectivity; browser/device and translation reviews remain necessary before launch.
+
+## Design preservation — Denise’s instruction, November 11, 2026
+
+The current implementation is an approximation, not an approved replacement for the selected reference. Restoration remains incomplete.
+
+The authoritative selection is the screenshot `IMG_2297.jpeg` shared with “Keep the text and font as is.” It shows navy/lavender/cream scrapbook styling: textured torn parchment, lace, tape, Polaroid framing, delicate botanical illustrations, handwritten details, and the original copy and typography. Restore against that visual reference, not a new interpretation. Reference imagery must not be presented as verified family testimony or consented documentary photographs.
+
+After restoration, preserve layout, colors, fonts, wording, imagery, and decorative details. Do not redesign or substitute assets without Denise’s explicit request. Functional, security, accessibility, and deployment work must preserve the approved appearance; report conflicts rather than silently changing it. Verify desktop and mobile rendering against the reference before claiming restoration is complete.
