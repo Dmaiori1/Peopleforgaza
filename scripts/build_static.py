@@ -24,6 +24,12 @@ def build(root):
         artwork = root / "people-for-gaza-artwork.webp"
         if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
         if artwork.is_file(): shutil.copyfile(artwork, output / artwork.name)
+        assets = root / "assets"
+        if assets.is_dir():
+            (output / "assets").mkdir()
+            for asset in assets.glob("*.webp"):
+                if asset.is_symlink(): raise ValueError("Public assets must not be symlinks")
+                shutil.copyfile(asset, output / "assets" / asset.name)
         errors = check(output)
         if errors: raise ValueError("\n".join(errors))
     except Exception:
