@@ -24,3 +24,13 @@ The root `index.html` can be deployed on a static host (GitHub Pages, Render Sta
 - Test payment webhooks and refund/chargeback handling in sandbox mode first.
 
 See [Editorial & Safety Policy](editorial-policy.html) and [Privacy](privacy.html).
+
+## Offline checks
+Requires Python 3.9 or newer; no package installation or network access is needed.
+
+```sh
+python3 scripts/check_site.py
+python3 -m unittest discover -s tests
+```
+
+The checker validates root HTML pages for local links/fragments, one main landmark and heading, document languages/Arabic direction, image alt attributes, and insecure link schemes. Forms, input controls, scripts, and iframes fail review checks while submissions remain closed. This is a static regression guard, not a security certification or browser/screen-reader test. External URL availability, contrast, layout, and translation accuracy require separate review. It does not contact visitors or collect data.
