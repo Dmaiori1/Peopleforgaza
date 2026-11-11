@@ -30,6 +30,12 @@ class BuildTests(unittest.TestCase):
         (self.root / "index.html").write_text(HTML.replace("</main>", '<a href="funding-transparency.html">Funding</a></main>'))
         output = build(self.root)
         self.assertEqual((output / "funding-transparency.html").read_text(), HTML)
+    def test_symlinked_asset_directory_is_rejected(self):
+        with tempfile.TemporaryDirectory() as elsewhere:
+            (Path(elsewhere) / "private.webp").write_bytes(b"private")
+            (self.root / "assets").symlink_to(elsewhere, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
+            self.assertFalse((self.root / "dist").exists())
     def test_existing_output_is_not_overwritten(self):
         output = self.root / "dist"
         output.mkdir()
