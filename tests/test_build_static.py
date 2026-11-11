@@ -25,6 +25,11 @@ class BuildTests(unittest.TestCase):
         artwork.write_bytes(b"reviewed-artwork")
         output = build(self.root)
         self.assertEqual((output / artwork.name).read_bytes(), artwork.read_bytes())
+    def test_funding_page_is_packaged(self):
+        (self.root / "funding-transparency.html").write_text(HTML)
+        (self.root / "index.html").write_text(HTML.replace("</main>", '<a href="funding-transparency.html">Funding</a></main>'))
+        output = build(self.root)
+        self.assertEqual((output / "funding-transparency.html").read_text(), HTML)
     def test_existing_output_is_not_overwritten(self):
         output = self.root / "dist"
         output.mkdir()
