@@ -21,6 +21,9 @@ def build(root):
     output.mkdir()
     try:
         for name in pages: shutil.copyfile(root / name, output / name)
+        artwork = root / "people-for-gaza-artwork.webp"
+        if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
+        if artwork.is_file(): shutil.copyfile(artwork, output / artwork.name)
         errors = check(output)
         if errors: raise ValueError("\n".join(errors))
     except Exception:

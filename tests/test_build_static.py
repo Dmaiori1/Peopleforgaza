@@ -20,6 +20,11 @@ class BuildTests(unittest.TestCase):
         output = build(self.root)
         self.assertEqual(sorted(p.name for p in output.iterdir()), sorted(PAGES))
         for name in PAGES: self.assertEqual((output/name).read_bytes(), (self.root/name).read_bytes())
+    def test_redesign_artwork_is_packaged(self):
+        artwork = self.root / "people-for-gaza-artwork.webp"
+        artwork.write_bytes(b"reviewed-artwork")
+        output = build(self.root)
+        self.assertEqual((output / artwork.name).read_bytes(), artwork.read_bytes())
     def test_existing_output_is_not_overwritten(self):
         output = self.root / "dist"
         output.mkdir()
