@@ -23,6 +23,10 @@ def build(root):
     output.mkdir()
     try:
         for name in pages: shutil.copyfile(root / name, output / name)
+        # Preserve the existing custom domain without creating or changing it.
+        domain = root / "CNAME"
+        if domain.is_symlink(): raise ValueError("Custom domain file must not be a symlink")
+        if domain.is_file(): shutil.copyfile(domain, output / domain.name)
         artwork = root / "people-for-gaza-artwork.webp"
         if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
         if artwork.is_file(): shutil.copyfile(artwork, output / artwork.name)
