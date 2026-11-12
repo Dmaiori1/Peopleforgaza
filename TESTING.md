@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 24 tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 26 tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -21,11 +21,14 @@ On November 12, a fresh copy of all five public pages and three artwork assets p
 | Desktop homepage rendering | Scrapbook artwork visibly loaded in Chrome on November 11. |
 | Linked pages | Followed homepage to Arabic, Arabic to Privacy, Privacy back home, and home to Funding Transparency on November 11. |
 | Homepage keyboard skip | Tab reached skip link first; Enter focused details; next Tab reached footer Editorial & safety on November 11. |
+| Arabic keyboard skip | On November 12, Tab reached skip first and Enter focused main including the heading and introduction; desktop view showed no obvious clipping. |
 | Funding keyboard skip | Tab reached skip link first; Enter focused main; next Tab reached footer Home on November 12. |
 
 These observations used a remote desktop browser, not physical phones or a running screen reader.
 
 On November 12, live Chrome DOM inspection confirmed `meta[name="referrer"]` has content `no-referrer` on Privacy, Editorial & Safety, and Funding Transparency. No outbound header capture was performed.
+
+On November 12, after the execution environment recovered, a fresh 26-test regression run passed. All five current HTML pages also passed parser-level main/heading containment and safety checks. This pass did not rerun full asset packaging.
 
 ## Open verification work
 - Mobile and tablet browser interaction, narrow widths, zoom and text enlargement.
