@@ -30,9 +30,10 @@ def build(root):
         if assets.is_symlink(): raise ValueError("Public assets directory must not be a symlink")
         if assets.is_dir():
             (output / "assets").mkdir()
-            for asset in assets.glob("*.webp"):
+            for name in ("family-scrapbook.webp", "paper-texture.webp"):
+                asset = assets / name
                 if asset.is_symlink(): raise ValueError("Public assets must not be symlinks")
-                shutil.copyfile(asset, output / "assets" / asset.name)
+                if asset.is_file(): shutil.copyfile(asset, output / "assets" / asset.name)
         errors = check(output)
         if errors: raise ValueError("\n".join(errors))
     except Exception:
