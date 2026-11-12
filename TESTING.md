@@ -23,12 +23,14 @@ The most recently executed full regression suite passed 23 tests. Coverage inclu
 
 These observations used a remote desktop browser, not physical phones or a running screen reader.
 
+On November 12, live Chrome DOM inspection confirmed `meta[name="referrer"]` has content `no-referrer` on Privacy, Editorial & Safety, and Funding Transparency. No outbound header capture was performed.
+
 ## Open verification work
 - Mobile and tablet browser interaction, narrow widths, zoom and text enlargement.
 - VoiceOver and TalkBack with real assistive technology.
 - Arabic review by a qualified speaker.
 - Current visual comparison against Denise's selected reference; successful loading is not proof of exact design fidelity.
-- Browser verification of the policy-page no-referrer metadata added November 12.
+- Network-level verification of referrer headers; DOM metadata alone does not prove every outbound request.
 - Full keyboard traversal, focus visibility, back/forward behavior and broken-image recovery.
 - Fresh checks after any later source change.
 
