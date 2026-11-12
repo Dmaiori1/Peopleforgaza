@@ -20,6 +20,18 @@ class BuildTests(unittest.TestCase):
         output = build(self.root)
         self.assertEqual(sorted(p.name for p in output.iterdir()), sorted(PAGES))
         for name in PAGES: self.assertEqual((output/name).read_bytes(), (self.root/name).read_bytes())
+    def test_existing_custom_domain_is_preserved(self):
+        domain = self.root / "CNAME"
+        domain.write_bytes(b"peopleforgaza.org\n")
+        output = build(self.root)
+        self.assertEqual((output / "CNAME").read_bytes(), domain.read_bytes())
+    def test_symlinked_custom_domain_is_rejected(self):
+        with tempfile.TemporaryDirectory() as elsewhere:
+            external = Path(elsewhere) / "private.txt"
+            external.write_text("private")
+            (self.root / "CNAME").symlink_to(external)
+            with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
+            self.assertFalse((self.root / "dist").exists())
     def test_redesign_artwork_is_packaged(self):
         artwork = self.root / "people-for-gaza-artwork.webp"
         artwork.write_bytes(b"reviewed-artwork")
