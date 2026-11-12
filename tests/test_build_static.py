@@ -36,6 +36,15 @@ class BuildTests(unittest.TestCase):
             (self.root / "assets").symlink_to(elsewhere, target_is_directory=True)
             with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
             self.assertFalse((self.root / "dist").exists())
+    def test_only_reviewed_assets_are_packaged(self):
+        assets = self.root / "assets"
+        assets.mkdir()
+        for name in ("family-scrapbook.webp", "paper-texture.webp", "unreviewed.webp"):
+            (assets / name).write_bytes(name.encode())
+        output = build(self.root)
+        self.assertEqual(sorted(p.name for p in (output / "assets").iterdir()), ["family-scrapbook.webp", "paper-texture.webp"])
+        for name in ("family-scrapbook.webp", "paper-texture.webp"):
+            self.assertEqual((output / "assets" / name).read_bytes(), (assets / name).read_bytes())
     def test_existing_output_is_not_overwritten(self):
         output = self.root / "dist"
         output.mkdir()
