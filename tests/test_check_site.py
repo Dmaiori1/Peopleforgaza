@@ -21,6 +21,10 @@ class CheckerTests(unittest.TestCase):
         self.assertTrue(any("base URL" in e for e in self.run_case('<base href="https://other.example/"><a href="#main">Content</a>')))
     def test_missing_css_background_is_rejected(self):
         self.assertTrue(any("missing link target" in e for e in self.run_case("<style>body{background:url(\'missing.webp\')}</style>")))
+    def test_heading_outside_main_is_rejected(self):
+        for html in ('<h1>Title</h1><main></main>', '<main></main><h1>Title</h1>'):
+            with self.subTest(html=html):
+                self.assertTrue(any("h1 outside main" in e for e in checker.Page(html).errors))
     def test_valid_page(self):
         self.assertEqual(self.run_case('<a href="#main">Content</a>'), [])
     def test_broken_fragment(self):
