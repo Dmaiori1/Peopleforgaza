@@ -18,6 +18,8 @@ class Page(HTMLParser):
             self.errors.append("inline event handler requires privacy/security review")
         if tag == "meta" and a.get("http-equiv", "").lower() == "refresh":
             self.errors.append("automatic refresh/redirect requires review")
+        if tag == "base":
+            self.errors.append("document base URL/target requires navigation and privacy review")
         if tag == "html":
             self.lang, self.direction = a.get("lang"), a.get("dir")
         if "id" in a:
