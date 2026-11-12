@@ -44,3 +44,6 @@ Preserve the selected design, wording and typography. Keep fictional imagery and
 
 ## Custom-domain packaging regression — November 12, 2026
 The package helper previously omitted the repository's existing CNAME file. A regression reproduced the missing output before the fix. The helper now copies that file byte-for-byte when present and rejects symlinks, cleaning staged output on failure. Both new regressions pass alongside the existing suite (28 tests total). Tests also retain the existing no-CNAME behavior. This changes packaging only; DNS, CNAME source, hosting settings, public pages and design were not changed. A full current-assets package and live deployment were not exercised in this pass.
+
+## Full package verification — November 12, 2026
+Fetched the current five HTML pages, three WebP artwork assets, CNAME, checker, builder and regression tests from GitHub. Static validation, all 28 tests and a fresh package build passed. All nine packaged files (five pages, three assets and CNAME) were byte-identical to the fetched source. This closes the prior full-package verification gap for the custom-domain fix. No hosting settings or live deployment were changed or tested in this pass; mobile, assistive-technology and translation review remain open.
