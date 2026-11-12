@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 import sys
+import re
 
 class Page(HTMLParser):
     def __init__(self, source):
@@ -11,9 +12,11 @@ class Page(HTMLParser):
         self.ids, self.links, self.errors = set(), [], []
         self.lang = self.direction = None
         self.main = self.h1 = 0
+        self.in_style = False
         self.feed(source)
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == "style": self.in_style = True
         if any(name.startswith("on") for name in a):
             self.errors.append("inline event handler requires privacy/security review")
         if tag == "meta" and a.get("http-equiv", "").lower() == "refresh":
@@ -38,6 +41,15 @@ class Page(HTMLParser):
             self.errors.append("image missing alt")
         if tag in ("iframe", "object", "embed"):
             self.errors.append("embedded third-party content requires review")
+
+    def handle_endtag(self, tag):
+        if tag == "style": self.in_style = False
+    def handle_data(self, data):
+        if self.in_style:
+            # Covers literal url() references in embedded styles, not a full CSS parser.
+            data = re.sub(r"/\*.*?\*/", "", data, flags=re.S)
+            for match in re.finditer(r"""url\(\s*(['"]?)(.*?)\1\s*\)""", data, flags=re.I | re.S):
+                self.links.append(match.group(2).strip())
 
 def check(root):
     root = Path(root).resolve()
