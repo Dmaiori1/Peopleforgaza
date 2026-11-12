@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 26 tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 28 tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -41,3 +41,6 @@ On November 12, after the execution environment recovered, a fresh 26-test regre
 
 ## Boundaries
 Preserve the selected design, wording and typography. Keep fictional imagery and quotations labeled. Do not open story submissions or payments through this verification work. Do not alter DNS, domain or hosting settings. GitHub Pages at peopleforgaza.org is the current user-selected hosting; the linked VIII Site project is unrelated and must not be used for this project.
+
+## Custom-domain packaging regression — November 12, 2026
+The package helper previously omitted the repository's existing CNAME file. A regression reproduced the missing output before the fix. The helper now copies that file byte-for-byte when present and rejects symlinks, cleaning staged output on failure. Both new regressions pass alongside the existing suite (28 tests total). Tests also retain the existing no-CNAME behavior. This changes packaging only; DNS, CNAME source, hosting settings, public pages and design were not changed. A full current-assets package and live deployment were not exercised in this pass.
