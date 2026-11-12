@@ -17,6 +17,8 @@ class CheckerTests(unittest.TestCase):
         self.assertTrue(any("malformed link" in e for e in self.run_case('<a href="https://[broken">Broken</a>')))
     def test_missing_image_is_rejected(self):
         self.assertTrue(any("missing link target" in e for e in self.run_case('<img src="missing.webp" alt="Illustration">')))
+    def test_base_url_requires_review(self):
+        self.assertTrue(any("base URL" in e for e in self.run_case('<base href="https://other.example/"><a href="#main">Content</a>')))
     def test_valid_page(self):
         self.assertEqual(self.run_case('<a href="#main">Content</a>'), [])
     def test_broken_fragment(self):
