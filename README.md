@@ -9,7 +9,7 @@ The homepage is a static prototype. **No story submission form, donation process
 Navy blue, lavender, gentle botanical accents, responsive HTML.
 
 ## Publishing
-The root `index.html` can be deployed on a static host (GitHub Pages, Render Static Site, etc.). Hosting must be explicitly configured in the hosting provider. A domain purchase is not required for a preview URL.
+The user-selected site is hosted on GitHub Pages at https://peopleforgaza.org. Preserve existing DNS, domain, CNAME, and hosting settings. Do not create a replacement host or reuse the unrelated VIII Site project. Repository commits and successful publication are distinct; verify the live result before claiming a change is published.
 
 ## Before accepting stories
 - Obtain informed, revocable consent in the contributor's language.
@@ -41,9 +41,9 @@ The checker validates root HTML pages for local links/fragments, one main landma
 python3 scripts/build_static.py
 ```
 
-This validates the source pages and creates `dist/` containing only `index.html`, `ar.html`, `privacy.html`, and `editorial-policy.html`. It validates links again in the staged output and refuses to overwrite an existing `dist/`. Review and remove old output explicitly before rebuilding. No dependencies, hosting calls, payment services, or collection endpoints are enabled. Future public assets must be added to the reviewed allowlist before they are used.
+This validates the source pages and creates `dist/` containing the four required pages (`index.html`, `ar.html`, `privacy.html`, and `editorial-policy.html`), `funding-transparency.html` when present, the reviewed root scrapbook artwork when present, and WebP files from `assets/` when present. It validates links again in the staged output and refuses to overwrite an existing `dist/`. Review and remove old output explicitly before rebuilding. No dependencies, hosting calls, payment services, or collection endpoints are enabled. Future public assets must be added to the reviewed allowlist before they are used.
 
-Deploy only the staged directory after separately configuring the correct People for Gaza host. The VIII Site project ID must not be reused for this project. External Google Fonts still require connectivity; browser/device and translation reviews remain necessary before launch.
+The packaging helper prepares output for verification; it does not configure or deploy GitHub Pages. Preserve the existing publishing setup. The VIII Site project ID must not be reused for this project. External Google Fonts still require connectivity; browser/device and translation reviews remain necessary before launch. See [TESTING.md](TESTING.md) for observed results and concrete verification limits.
 
 ## Design preservation — Denise’s instruction, November 11, 2026
 
