@@ -27,6 +27,10 @@ class CheckerTests(unittest.TestCase):
                 self.assertTrue(any("h1 outside main" in e for e in checker.Page(html).errors))
     def test_valid_page(self):
         self.assertEqual(self.run_case('<a href="#main">Content</a>'), [])
+    def test_site_root_links_resolve_inside_package(self):
+        self.assertEqual(self.run_case('<a href="/index.html#main">Home</a><a href="/#main">Home</a>'), [])
+    def test_encoded_parent_path_still_cannot_escape_root(self):
+        self.assertTrue(any("escapes site root" in e for e in self.run_case('<a href="/%2e%2e/private.txt">Invalid</a>')))
     def test_broken_fragment(self):
         self.assertTrue(any("missing fragment" in e for e in self.run_case('<a href="#absent">Broken</a>')))
     def test_missing_file(self):
