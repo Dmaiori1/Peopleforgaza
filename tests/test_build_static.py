@@ -77,6 +77,18 @@ class BuildTests(unittest.TestCase):
         (output / "keep.txt").write_text("keep")
         with self.assertRaises(ValueError): build(self.root)
         self.assertEqual((output/"keep.txt").read_text(), "keep")
+    def test_recovery_page_is_packaged_with_working_root_links(self):
+        page = HTML.replace("</main>", '<a href="/index.html">Home</a><a href="/ar.html" lang="ar">العربية</a></main>')
+        (self.root / "404.html").write_text(page, encoding="utf-8")
+        output = build(self.root)
+        self.assertEqual((output / "404.html").read_text(encoding="utf-8"), page)
+    def test_symlinked_recovery_page_is_rejected(self):
+        with tempfile.TemporaryDirectory() as elsewhere:
+            external = Path(elsewhere) / "private.html"
+            external.write_text(HTML)
+            (self.root / "404.html").symlink_to(external)
+            with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
+            self.assertFalse((self.root / "dist").exists())
     def test_missing_page_creates_no_output(self):
         (self.root/"ar.html").unlink()
         with self.assertRaises(ValueError): build(self.root)
