@@ -38,6 +38,14 @@ class BuildTests(unittest.TestCase):
         output = build(self.root)
         self.assertTrue((output / ".nojekyll").is_file())
         self.assertEqual((output / ".nojekyll").read_bytes(), b"")
+    def test_symlinked_static_pages_marker_is_rejected(self):
+        with tempfile.TemporaryDirectory() as elsewhere:
+            external = Path(elsewhere) / "private.txt"
+            external.write_text("private fixture")
+            (self.root / ".nojekyll").symlink_to(external)
+            with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
+            self.assertFalse((self.root / "dist").exists())
+            self.assertEqual(external.read_text(), "private fixture")
     def test_redesign_artwork_is_packaged(self):
         artwork = self.root / "people-for-gaza-artwork.webp"
         artwork.write_bytes(b"reviewed-artwork")
