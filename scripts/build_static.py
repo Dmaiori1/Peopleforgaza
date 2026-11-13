@@ -27,6 +27,9 @@ def build(root):
         domain = root / "CNAME"
         if domain.is_symlink(): raise ValueError("Custom domain file must not be a symlink")
         if domain.is_file(): shutil.copyfile(domain, output / domain.name)
+        marker = root / ".nojekyll"
+        if marker.is_symlink(): raise ValueError("Static Pages marker must not be a symlink")
+        if marker.is_file(): shutil.copyfile(marker, output / marker.name)
         artwork = root / "people-for-gaza-artwork.webp"
         if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
         if artwork.is_file(): shutil.copyfile(artwork, output / artwork.name)
