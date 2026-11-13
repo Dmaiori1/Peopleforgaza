@@ -23,7 +23,7 @@ The user-selected site is hosted on GitHub Pages at https://peopleforgaza.org. P
 - Do not claim donations are tax deductible unless this is verified.
 - Test payment webhooks and refund/chargeback handling in sandbox mode first.
 
-See [Editorial & Safety Policy](editorial-policy.html) and [Privacy](privacy.html).
+See [Editorial & Safety Policy](editorial-policy.html) and [Privacy](privacy.html). Implementation gates and acceptance evidence are listed in [Story submission readiness](docs/story-readiness.md) and [Payment readiness](docs/payment-readiness.md). Both workflows remain closed; these checklists describe unfinished work.
 
 ## Offline checks
 Requires Python 3.9 or newer; no package installation or network access is needed.
