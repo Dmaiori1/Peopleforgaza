@@ -81,7 +81,13 @@ def check(root):
                 if url.scheme not in ("https", "mailto", "tel"):
                     errors.append(name + ": unsupported or insecure link scheme")
                 continue
-            target = (path.parent / unquote(url.path)).resolve() if url.path else path
+            local_path = unquote(url.path)
+            if local_path.startswith("/"):
+                target = (root / local_path.lstrip("/")).resolve()
+            else:
+                target = (path.parent / local_path).resolve() if local_path else path
+            if local_path.endswith("/"):
+                target = (target / "index.html").resolve()
             if not target.is_relative_to(root):
                 errors.append(name + ": link escapes site root")
                 continue
