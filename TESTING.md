@@ -47,3 +47,6 @@ The package helper previously omitted the repository's existing CNAME file. A re
 
 ## Full package verification — November 12, 2026
 Fetched the current five HTML pages, three WebP artwork assets, CNAME, checker, builder and regression tests from GitHub. Static validation, all 28 tests and a fresh package build passed. All nine packaged files (five pages, three assets and CNAME) were byte-identical to the fetched source. This closes the prior full-package verification gap for the custom-domain fix. No hosting settings or live deployment were changed or tested in this pass; mobile, assistive-technology and translation review remain open.
+
+## Offline calculator checks — November 12, 2026
+Run `node --test tests/payment-calculator.test.mjs` from the repository root with Node.js 18 or newer, in addition to the Python checks. No npm installation, credentials or network access is required. Three calculator tests passed on Node.js 24.22.1; the existing 28 Python tests also passed in this verification pass. The calculator tests cover normal allocation, integer rounding (including the reproduced large-input one-cent error), allocation conservation and rejected inputs/fees. Node.js 18 compatibility was not executed. These are offline preparation checks, not checkout, provider, webhook or payout tests. Payments remain disabled and no launch approval is implied.
