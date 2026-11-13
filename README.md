@@ -26,6 +26,9 @@ The user-selected site is hosted on GitHub Pages at https://peopleforgaza.org. P
 See [Editorial & Safety Policy](editorial-policy.html) and [Privacy](privacy.html). Implementation gates and acceptance evidence are listed in [Story submission readiness](docs/story-readiness.md) and [Payment readiness](docs/payment-readiness.md). Both workflows remain closed; these checklists describe unfinished work.
 
 ## Offline checks
+
+Run `python3 scripts/verify.py` to execute static validation, Python regressions and Node payment-preparation tests together. Requires Python 3.9+ and Node.js 18+; installs nothing and makes no network calls. Missing Node or a failed check returns a failure instead of silently skipping tests. Packaging remains a separate explicit step. The combined command was verified with Python 3.12 and Node.js 24.22.1.
+
 Requires Python 3.9 or newer; no package installation or network access is needed.
 
 ```sh
