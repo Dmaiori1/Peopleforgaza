@@ -32,6 +32,12 @@ class BuildTests(unittest.TestCase):
             (self.root / "CNAME").symlink_to(external)
             with self.assertRaisesRegex(ValueError, "symlink"): build(self.root)
             self.assertFalse((self.root / "dist").exists())
+    def test_existing_static_pages_marker_is_preserved(self):
+        marker = self.root / ".nojekyll"
+        marker.write_bytes(b"")
+        output = build(self.root)
+        self.assertTrue((output / ".nojekyll").is_file())
+        self.assertEqual((output / ".nojekyll").read_bytes(), b"")
     def test_redesign_artwork_is_packaged(self):
         artwork = self.root / "people-for-gaza-artwork.webp"
         artwork.write_bytes(b"reviewed-artwork")
