@@ -9,3 +9,11 @@ The eventual integration will require a secure backend (GitHub Pages is static),
 For readiness and compliance gates, see [payment-readiness](../docs/payment-readiness.md).
 
 **Design lock:** Do not modify the homepage, images, colors, fonts, copy, Arabic page, privacy/editorial pages, domain, DNS, or hosting while preparing payments.
+
+## Offline verification
+
+Run from the repository root with Node.js 18 or newer:
+```sh
+node --test tests/payment-calculator.test.mjs
+```
+No npm installation, credentials or network access is required. The tests cover a normal allocation, cent-rounding boundaries, a large safe-integer regression, conservation of allocated cents, invalid inputs and fees exceeding the beneficiary allocation. They do not test a provider integration or establish readiness to collect money. Keep checkout and payouts disabled.
