@@ -19,3 +19,15 @@ test('invalid amounts and excessive fees are rejected', () => {
   for (const fee of [-1,1.5,NaN,Infinity,'1',96]) assert.throws(() => donationBreakdown(100,fee), RangeError);
   assert.equal(donationBreakdown(100,95).estimatedBeneficiaryNetCents,0);
 });
+
+test('preparation configuration keeps payment collection disabled', async () => {
+  const config = JSON.parse(await readFile(new URL('../payments/config.example.json', import.meta.url), 'utf8'));
+  assert.equal(config.status, 'disabled');
+  assert.equal(config.provider, 'unselected');
+  assert.equal(config.checkout_enabled, false);
+  assert.equal(config.payouts_enabled, false);
+  assert.equal(config.requires_provider_approval, true);
+  assert.equal(config.requires_legal_review, true);
+  assert.equal(config.platform_fee_basis_points, 500);
+  assert.equal(config.beneficiary_share_basis_points, 9500);
+});
