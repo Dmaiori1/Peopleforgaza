@@ -56,3 +56,6 @@ Opened the live `/preview/mobile.html` page in remote Chrome. Its 390px-wide ifr
 
 ## Disabled payment configuration regression — November 13, 2026
 The Node suite now contains four passing tests, including assertions that checkout and payouts stay disabled, the provider remains unselected, both approval requirements remain true, and the proposed allocation stays at 500/9500 basis points. In disposable local copies, independently enabling checkout, enabling payouts, removing provider approval or removing legal review caused the suite to fail. The original repository configuration was not changed. This verifies the test guard; it does not implement runtime authorization or a payment backend.
+
+## Static Pages marker preservation — November 13, 2026
+The packaging helper now preserves the existing `.nojekyll` marker when present, without creating one or changing Pages configuration. The new regression reproduced its omission before the fix; all 29 Python tests pass after the fix. The current GitHub builder and regression file were read back for verification. This is packaging evidence only; live deployment and a fresh full-assets package were not exercised in this pass.
