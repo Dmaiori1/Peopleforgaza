@@ -17,6 +17,32 @@ class CheckerTests(unittest.TestCase):
         self.assertTrue(any("malformed link" in e for e in self.run_case('<a href="https://[broken">Broken</a>')))
     def test_missing_image_is_rejected(self):
         self.assertTrue(any("missing link target" in e for e in self.run_case('<img src="missing.webp" alt="Illustration">')))
+    def test_missing_responsive_image_candidates_are_rejected(self):
+        for markup in (
+            '<picture><source srcset="missing-mobile.webp"><img src="index.html" alt="Fixture"></picture>',
+            '<img src="index.html" srcset="index.html 1x, missing-large.webp 2x" alt="Fixture">',
+        ):
+            with self.subTest(markup=markup):
+                self.assertTrue(any("missing link target" in e for e in self.run_case(markup)))
+    def test_responsive_candidates_keep_commas_inside_urls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for name in ("small.webp", "large,wide.webp"):
+                (root / name).write_bytes(b"fixture")
+            (root / "index.html").write_text('<html lang="en"><main><h1>Fixture</h1><picture><source srcset="small.webp 1x, large,wide.webp 2x"><img src="small.webp" alt="Fixture"></picture></main></html>')
+            self.assertEqual(checker.check(root), [])
+    def test_responsive_image_schemes_require_review(self):
+        self.assertTrue(any("insecure" in e for e in self.run_case('<img src="index.html" srcset="http://example.test/image.webp 2x" alt="Fixture">')))
+    def test_responsive_candidate_url_tokenization(self):
+        for value, expected in (
+            ("small.webp, large.webp 2x", ["small.webp", "large.webp"]),
+            ("small.webp 1x,large,wide.webp 2x", ["small.webp", "large,wide.webp"]),
+            ("data:image/png;base64,AAAA 1x, large.webp 2x", ["data:image/png;base64,AAAA", "large.webp"]),
+            ("small.webp future(a,b), large.webp 2x", ["small.webp", "large.webp"]),
+            ("", []),
+        ):
+            with self.subTest(value=value):
+                self.assertEqual(checker.image_candidate_urls(value), expected)
     def test_base_url_requires_review(self):
         self.assertTrue(any("base URL" in e for e in self.run_case('<base href="https://other.example/"><a href="#main">Content</a>')))
     def test_missing_css_background_is_rejected(self):
