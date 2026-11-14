@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 13, 2026. This records bounded checks, not launch approval.
+Updated November 14, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run from the repository root with Python 3.9 or newer:
@@ -79,3 +79,14 @@ Static validation, all 40 Python tests and four offline Node tests passed. This 
 The homepage hides `.art` at widths up to 700px but previously exposed its full desktop image as an unconditional eager image candidate. Wrapped that unchanged image in `picture` with a matching `max-width:700px` source pointing to the existing 552-byte paper texture, already used by the mobile background. Wider screens retain the original desktop artwork fallback; narrow screens retain their existing separate family image and layout. No CSS, text, artwork files, alt text or image dimensions were changed. Removing the wrapper/source restores the preceding source exactly. Image source-selection guidance: https://html.spec.whatwg.org/dev/images.html .
 
 Static validation, all 40 Python tests, four offline Node tests and a fresh temporary package passed. Both candidate assets and responsive source markup were present in the package, and every packaged file matched its staged input byte-for-byte. This verifies source/package preparation only. Actual `currentSrc`, network transfer savings, viewport-resize behavior, live rendering and physical-device behavior were not measured. Browsers without picture support retain the original image fallback. No hosting, intake or payment settings changed.
+
+## Reviewed artwork metadata inspection — November 14, 2026
+Inspected the RIFF/WebP structure of the current three reviewed artwork assets. Local Git blob hashes matched the current repository tree exactly:
+
+| Asset | Git blob SHA | Chunks found |
+| --- | --- | --- |
+| `people-for-gaza-artwork.webp` | `10f9189f5823892c0ca4d0a21ed79174ed25c291` | VP8 only |
+| `assets/family-scrapbook.webp` | `6a7438006498e8d8813b612f10586083e9e9ce20` | VP8 only |
+| `assets/paper-texture.webp` | `ece4696aca73c78f3da76cd5269ad610b697b918` | VP8 only |
+
+Container lengths and chunk boundaries were valid; none contained EXIF or XMP metadata chunks. No artwork was rewritten. This is bounded metadata evidence for these exact files, not evidence of family consent, image authenticity, absence of identifying visual content, or a working upload-sanitization pipeline. Future contributor media still needs the private intake and review workflow in `docs/story-readiness.md`. Static validation, all 40 Python tests and four offline Node tests also passed. No design, content, domain, hosting, intake or payment changes were made.
