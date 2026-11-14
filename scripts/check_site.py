@@ -6,6 +6,33 @@ from urllib.parse import unquote, urlsplit
 import sys
 import re
 
+def image_candidate_urls(value):
+    """Extract srcset URLs; descriptor validity and media selection need browser checks."""
+    value = value or ""
+    whitespace = " \t\n\r\f"
+    position, urls = 0, []
+    while position < len(value):
+        while position < len(value) and value[position] in whitespace + ",":
+            position += 1
+        start = position
+        while position < len(value) and value[position] not in whitespace:
+            position += 1
+        url = value[start:position]
+        if not url:
+            break
+        # Commas inside a URL are significant; only trailing commas separate it.
+        urls.append(url.rstrip(","))
+        if url.endswith(","):
+            continue
+        in_parentheses = False
+        while position < len(value):
+            character = value[position]
+            position += 1
+            if character == "(": in_parentheses = True
+            elif character == ")": in_parentheses = False
+            elif character == "," and not in_parentheses: break
+    return urls
+
 class Page(HTMLParser):
     def __init__(self, source):
         super().__init__(convert_charrefs=True)
@@ -44,6 +71,8 @@ class Page(HTMLParser):
         if tag == "script":
             self.errors.append("script requires privacy/security review")
         if tag == "img" and "src" in a: self.links.append(a["src"])
+        if tag in ("img", "source") and "srcset" in a:
+            self.links.extend(image_candidate_urls(a["srcset"]))
         if tag == "img" and "alt" not in a:
             self.errors.append("image missing alt")
         if tag in ("iframe", "object", "embed"):
