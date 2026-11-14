@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 39 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 40 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -64,3 +64,8 @@ The packaging helper now preserves the existing `.nojekyll` marker when present,
 Added `404.html` with the existing privacy-page styling, a keyboard skip link, English and Arabic home links, no scripts/forms, and no automatic redirect. Root-relative destinations support recovery from nested missing URLs on the existing custom-domain host. The checker previously treated `/index.html` and `/#main` as filesystem escapes; that false rejection was reproduced before fixing URL-to-package resolution. Encoded parent traversal remains rejected. The builder now includes the optional recovery page and rejects a symlink in its place.
 
 Static validation, all 39 Python tests and four offline Node tests passed. A fresh temporary package contained all six public pages, three artwork assets and CNAME; every output file matched its staged input byte-for-byte. Existing pages, artwork, domain and hosting configuration were unchanged. The error page's styling matches the existing privacy page source, but browser rendering, actual missing-URL delivery/HTTP status, and physical-device accessibility were not tested. No live-deployment success is claimed.
+
+## Hyperlink auditing review guard — November 13, 2026
+The HTML standard defines the `ping` attribute on anchor/image-map links as hyperlink auditing, capable of secondary POST requests when a link is followed: https://html.spec.whatwg.org/multipage/links.html#hyperlink-auditing . The checker previously accepted synthetic tracking-link fixtures without raising a privacy-review error. It now requires review for this attribute, including relative endpoints, multiple endpoints and uppercase HTML syntax. The regression failed before the change and passed afterward; static validation, all 40 Python tests and four offline Node tests passed.
+
+No current public page contained this attribute. This closes a regression-guard gap, not a confirmed visitor-data leak. No browser requests, actual tracking delivery or broader privacy certification were tested. Public content, design, hosting and disabled submission/payment status were unchanged.
