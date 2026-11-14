@@ -53,6 +53,14 @@ class CheckerTests(unittest.TestCase):
 
     def test_inline_event_handlers_require_review(self):
         self.assertTrue(any("event handler" in e for e in self.run_case('<img alt="" onerror="alert(1)">')))
+    def test_hyperlink_auditing_requires_privacy_review(self):
+        for markup in (
+            '<a href="#main" ping="https://audit.example.test/track">Link</a>',
+            '<area href="#main" ping="/audit" alt="Link">',
+            '<A HREF="#main" PING="https://audit.example.test/one https://audit.example.test/two">Link</A>',
+        ):
+            with self.subTest(markup=markup):
+                self.assertTrue(any("hyperlink auditing" in e for e in self.run_case(markup)))
     def test_meta_refresh_requires_review(self):
         self.assertTrue(any("refresh" in e for e in self.run_case('<meta http-equiv="refresh" content="0;url=https://example.test">')))
     def test_active_embeds_require_review(self):
