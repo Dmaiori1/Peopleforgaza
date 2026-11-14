@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 40 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 44 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -90,3 +90,8 @@ Inspected the RIFF/WebP structure of the current three reviewed artwork assets. 
 | `assets/paper-texture.webp` | `ece4696aca73c78f3da76cd5269ad610b697b918` | VP8 only |
 
 Container lengths and chunk boundaries were valid; none contained EXIF or XMP metadata chunks. No artwork was rewritten. This is bounded metadata evidence for these exact files, not evidence of family consent, image authenticity, absence of identifying visual content, or a working upload-sanitization pipeline. Future contributor media still needs the private intake and review workflow in `docs/story-readiness.md`. Static validation, all 40 Python tests and four offline Node tests also passed. No design, content, domain, hosting, intake or payment changes were made.
+
+## Responsive image candidate validation — November 14, 2026
+A synthetic picture with an existing fallback and a missing mobile `source srcset` previously passed the checker. The checker now extracts candidate URLs from `img` and `source` srcset attributes and applies the existing local-file, root-boundary and scheme checks to them. Regressions failed before the fix and passed afterward. URL extraction preserves commas inside URLs, handles trailing separators and does not split descriptors at parenthesized commas. It is not a full descriptor/conformance validator or browser media-query evaluator. Parsing reference: https://html.spec.whatwg.org/multipage/images.html#parse-a-srcset-attribute .
+
+Static validation, all 44 Python tests, four offline Node tests and a fresh temporary package passed. The actual responsive texture and fallback artwork exist; no current visitor-facing missing image was found. This fixes a regression-check coverage gap, without changing public pages, images, design, hosting, intake or payment status. Live source selection and network savings remain unverified.
