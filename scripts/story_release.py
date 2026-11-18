@@ -5,6 +5,7 @@ open intake. A future private backend must verify the approval records and
 recheck withdrawal immediately before publication. Never put real records here.
 """
 import hashlib
+from html import escape
 import json
 
 PUBLIC_TEXT_FIELDS = frozenset(("title", "body", "display_name", "language"))
@@ -44,3 +45,13 @@ def publication_issues(story, consent=None, review=None):
     if review.get("language_reviewed") is not True:
         issues.append("language_review_missing")
     return issues
+
+def approved_story_html_fields(story, consent=None, review=None):
+    """Prepare escaped fields for quoted HTML attributes/text, never scripts or URLs.
+
+    The caller must use trusted current approval records. This function does
+    not authenticate them, render a page, or publish anything.
+    """
+    if publication_issues(story, consent, review):
+        raise ValueError("story_not_ready")
+    return {field: escape(story[field], quote=True) for field in sorted(PUBLIC_TEXT_FIELDS)}
