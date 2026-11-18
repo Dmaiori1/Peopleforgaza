@@ -29,6 +29,8 @@ See [Editorial & Safety Policy](editorial-policy.html) and [Privacy](privacy.htm
 
 Run `python3 scripts/verify.py` to execute static validation, Python regressions and Node payment-preparation tests together. Requires Python 3.9+ and Node.js 18+; installs nothing and makes no network calls. Missing Node or a failed check returns a failure instead of silently skipping tests. Packaging remains a separate explicit step. The combined command was verified with Python 3.12 and Node.js 24.22.1.
 
+The [Verify site workflow](.github/workflows/verify.yml) runs these checks and the static-package build on pushes and pull requests to `main`, with manual execution also available. It uses pinned official actions, read-only repository access and a standard Ubuntu runner. The job skips private repositories; standard hosted execution is [free for public repositories](https://docs.github.com/en/actions/concepts/billing-and-usage). It uploads no artifacts or caches. This reports verification separately from the existing Pages deployment; it does not change hosting, enforce branch protection or open intake/payments.
+
 Requires Python 3.9 or newer; no package installation or network access is needed.
 
 ```sh
