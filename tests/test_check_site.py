@@ -70,6 +70,18 @@ class CheckerTests(unittest.TestCase):
                 self.assertTrue(any("h1 outside main" in e for e in checker.Page(html).errors))
     def test_valid_page(self):
         self.assertEqual(self.run_case('<a href="#main">Content</a>'), [])
+    def test_duplicate_attributes_cannot_hide_unchecked_values(self):
+        for markup in (
+            '<a href="javascript:fixture()" href="#main">Fixture</a>',
+            '<a HREF="http://example.test" href="#main">Fixture</a>',
+            '<img src="missing.webp" src="index.html" alt="Fixture">',
+            '<div id="main" id="other"></div>',
+            '<div style="background:url(missing.webp)" style="color:gold"></div>',
+        ):
+            with self.subTest(markup=markup):
+                self.assertTrue(any("duplicate HTML attribute" in e for e in self.run_case(markup)))
+    def test_attributes_can_repeat_across_separate_elements(self):
+        self.assertEqual(self.run_case('<a href="#main">One</a><a href="#main">Two</a>'), [])
     def test_site_root_links_resolve_inside_package(self):
         self.assertEqual(self.run_case('<a href="/index.html#main">Home</a><a href="/#main">Home</a>'), [])
     def test_encoded_parent_path_still_cannot_escape_root(self):
