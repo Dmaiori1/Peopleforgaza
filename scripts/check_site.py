@@ -50,6 +50,10 @@ class Page(HTMLParser):
         self.feed(source)
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        # Converting to a dict discards duplicate values. Reject ambiguity before
+        # validating the surviving URL, identity, language or style attributes.
+        if len(a) != len(attrs):
+            self.errors.append("duplicate HTML attribute requires review")
         if tag == "style": self.in_style = True
         if a.get("style"):
             self.links.extend(css_urls(a["style"]))
