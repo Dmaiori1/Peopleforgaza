@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from story_release import publication_issues, story_digest
+from story_release import approved_story_html_fields, publication_issues, story_digest
 
 class StoryReleaseTests(unittest.TestCase):
     def setUp(self):
@@ -62,6 +62,49 @@ class StoryReleaseTests(unittest.TestCase):
         for value in (None, {}, dict(self.story, body=" "), dict(self.story, body=False)):
             with self.subTest(value=value):
                 self.assertEqual(publication_issues(value), ["invalid_public_story"])
+
+    def test_html_template_fields_escape_markup_and_quotes(self):
+        story = dict(self.story, title='Test <tag> & "quote"', body="Synthetic <script>test</script>",
+                     display_name="Test 'label'")
+        digest = story_digest(story)
+        consent = dict(self.consent, content_digest=digest)
+        review = dict(self.review, content_digest=digest)
+        fields = approved_story_html_fields(story, consent, review)
+        self.assertEqual(fields["title"], 'Test &lt;tag&gt; &amp; &quot;quote&quot;')
+        self.assertEqual(fields["body"], "Synthetic &lt;script&gt;test&lt;/script&gt;")
+        self.assertEqual(fields["display_name"], "Test &#x27;label&#x27;")
+
+    def test_html_fields_preserve_unicode_and_line_breaks(self):
+        story = dict(self.story, body="اختبار\n日本語", language="ar")
+        digest = story_digest(story)
+        fields = approved_story_html_fields(story, dict(self.consent, content_digest=digest),
+                                           dict(self.review, content_digest=digest))
+        self.assertEqual(fields["body"], story["body"])
+        self.assertEqual(fields["language"], "ar")
+
+    def test_html_preparation_requires_current_approval(self):
+        for story, consent in ((self.story, None),
+                               (self.story, dict(self.consent, state="withdrawn")),
+                               (dict(self.story, body="Changed synthetic text"), self.consent)):
+            with self.subTest(story=story, consent=consent):
+                with self.assertRaisesRegex(ValueError, "^story_not_ready$"):
+                    approved_story_html_fields(story, consent, self.review)
+
+    def test_html_preparation_returns_only_public_fields_without_mutation(self):
+        consent = dict(self.consent, private_note="PRIVATE_FIXTURE")
+        review = dict(self.review, private_note="PRIVATE_FIXTURE")
+        original = dict(self.story)
+        fields = approved_story_html_fields(self.story, consent, review)
+        self.assertEqual(set(fields), set(original))
+        self.assertNotIn("PRIVATE_FIXTURE", str(fields))
+        self.assertEqual(self.story, original)
+
+    def test_html_attribute_field_escapes_quotes(self):
+        story = dict(self.story, language='en" data-test="fixture')
+        digest = story_digest(story)
+        fields = approved_story_html_fields(story, dict(self.consent, content_digest=digest),
+                                           dict(self.review, content_digest=digest))
+        self.assertEqual(fields["language"], "en&quot; data-test=&quot;fixture")
 
 if __name__ == "__main__":
     unittest.main()
