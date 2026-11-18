@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 44 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 53 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -100,3 +100,8 @@ Static validation, all 44 Python tests, four offline Node tests and a fresh temp
 Reconstructed a fresh working directory from commit `e1c428fe56b45d1afe524eb9a6ed4f706a285ade`, checking each fetched text file against its Git blob hash. The three existing local artwork files also matched the corresponding GitHub blob hashes before use. Static validation, all 44 Python tests, four offline Node tests and a clean package build passed.
 
 All 11 output files matched their repository blob hashes exactly: six HTML pages (including `404.html`), three reviewed WebP assets, `CNAME` and `.nojekyll`. Unlike earlier staged-input checks, this verifies exact equality to the repository snapshot, including both Pages control files. README now lists the optional recovery page already handled by the builder. No public design/content/assets or domain/hosting settings were changed. This is reproducible source/package evidence; it does not verify current live domain access, browser focus/rendering, physical devices or service launch readiness. Story intake and payments remain closed.
+
+## Text-story approval preparation — November 18, 2026
+Added an offline policy utility tying the exact title, body, display label and language to consent/editorial digests. Nine synthetic tests cover default rejection, matching records, changes to every public field (including a language change), withdrawal, channel restrictions, explicit review flags, private/unknown field rejection without value disclosure, deterministic key ordering and invalid text. No family biography, testimony, real contact data or actual approval record was added.
+
+Static validation, all 53 Python tests, four offline Node tests and a fresh temporary package passed. The staged package remains the same 11 public files and excludes the preparation scripts and fixtures. Existing public pages, artwork, CSS, copy and hosting settings were unchanged. The utility performs no network, storage, intake or publication operation and is not integrated into a backend. These tests establish internal record-consistency checks only; they do not establish authentic consent, access control, safe rendering, safeguarding, live withdrawal handling or launch readiness. See `docs/story-readiness.md` for the remaining implementation requirements.
