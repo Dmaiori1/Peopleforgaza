@@ -47,6 +47,23 @@ class CheckerTests(unittest.TestCase):
         self.assertTrue(any("base URL" in e for e in self.run_case('<base href="https://other.example/"><a href="#main">Content</a>')))
     def test_missing_css_background_is_rejected(self):
         self.assertTrue(any("missing link target" in e for e in self.run_case("<style>body{background:url(\'missing.webp\')}</style>")))
+    def test_missing_inline_css_background_is_rejected(self):
+        for markup in (
+            '<div style="background:url(missing.webp)"></div>',
+            '<div STYLE="background:URL(&quot;missing.webp&quot;)"></div>',
+            '<div style="background:url(index.html),url(missing.webp)"></div>',
+        ):
+            with self.subTest(markup=markup):
+                self.assertTrue(any("missing link target" in e for e in self.run_case(markup)))
+    def test_inline_css_urls_use_existing_safety_checks(self):
+        for url, error in (
+            ('http://example.test/image.webp', 'insecure'),
+            ('/%2e%2e/private.webp', 'escapes site root'),
+        ):
+            with self.subTest(url=url):
+                self.assertTrue(any(error in e for e in self.run_case('<div style="background:url('+url+')"></div>')))
+    def test_inline_css_existing_urls_and_comments(self):
+        self.assertEqual(self.run_case('<div style="background:url(/index.html); /* url(missing.webp) */ color:gold"></div>'), [])
     def test_heading_outside_main_is_rejected(self):
         for html in ('<h1>Title</h1><main></main>', '<main></main><h1>Title</h1>'):
             with self.subTest(html=html):
