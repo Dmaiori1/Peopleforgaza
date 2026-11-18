@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 14, 2026. This records bounded checks, not launch approval.
+Updated November 18, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run from the repository root with Python 3.9 or newer:
@@ -95,3 +95,8 @@ Container lengths and chunk boundaries were valid; none contained EXIF or XMP me
 A synthetic picture with an existing fallback and a missing mobile `source srcset` previously passed the checker. The checker now extracts candidate URLs from `img` and `source` srcset attributes and applies the existing local-file, root-boundary and scheme checks to them. Regressions failed before the fix and passed afterward. URL extraction preserves commas inside URLs, handles trailing separators and does not split descriptors at parenthesized commas. It is not a full descriptor/conformance validator or browser media-query evaluator. Parsing reference: https://html.spec.whatwg.org/multipage/images.html#parse-a-srcset-attribute .
 
 Static validation, all 44 Python tests, four offline Node tests and a fresh temporary package passed. The actual responsive texture and fallback artwork exist; no current visitor-facing missing image was found. This fixes a regression-check coverage gap, without changing public pages, images, design, hosting, intake or payment status. Live source selection and network savings remain unverified.
+
+## Exact GitHub-source package verification — November 18, 2026
+Reconstructed a fresh working directory from commit `e1c428fe56b45d1afe524eb9a6ed4f706a285ade`, checking each fetched text file against its Git blob hash. The three existing local artwork files also matched the corresponding GitHub blob hashes before use. Static validation, all 44 Python tests, four offline Node tests and a clean package build passed.
+
+All 11 output files matched their repository blob hashes exactly: six HTML pages (including `404.html`), three reviewed WebP assets, `CNAME` and `.nojekyll`. Unlike earlier staged-input checks, this verifies exact equality to the repository snapshot, including both Pages control files. README now lists the optional recovery page already handled by the builder. No public design/content/assets or domain/hosting settings were changed. This is reproducible source/package evidence; it does not verify current live domain access, browser focus/rendering, physical devices or service launch readiness. Story intake and payments remain closed.
