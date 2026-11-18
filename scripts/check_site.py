@@ -6,6 +6,12 @@ from urllib.parse import unquote, urlsplit
 import sys
 import re
 
+def css_urls(value):
+    """Extract literal url() references, not escaped URLs or full CSS syntax."""
+    value = re.sub(r"/\*.*?\*/", "", value, flags=re.S)
+    return [match.group(2).strip() for match in re.finditer(
+        r"""url\(\s*(['"]?)(.*?)\1\s*\)""", value, flags=re.I | re.S)]
+
 def image_candidate_urls(value):
     """Extract srcset URLs; descriptor validity and media selection need browser checks."""
     value = value or ""
@@ -45,6 +51,8 @@ class Page(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "style": self.in_style = True
+        if a.get("style"):
+            self.links.extend(css_urls(a["style"]))
         if any(name.startswith("on") for name in a):
             self.errors.append("inline event handler requires privacy/security review")
         if tag == "meta" and a.get("http-equiv", "").lower() == "refresh":
@@ -83,10 +91,7 @@ class Page(HTMLParser):
         if tag == "style": self.in_style = False
     def handle_data(self, data):
         if self.in_style:
-            # Covers literal url() references in embedded styles, not a full CSS parser.
-            data = re.sub(r"/\*.*?\*/", "", data, flags=re.S)
-            for match in re.finditer(r"""url\(\s*(['"]?)(.*?)\1\s*\)""", data, flags=re.I | re.S):
-                self.links.append(match.group(2).strip())
+            self.links.extend(css_urls(data))
 
 def check(root):
     root = Path(root).resolve()
