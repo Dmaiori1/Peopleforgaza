@@ -30,6 +30,14 @@ A future implementation should default to private draft, require review before p
 
 Minor participation requires additional safeguarding and appropriate guardian consent. Do not treat consent alone as evidence that publishing identifying content is safe.
 
+## Offline approval-check preparation
+
+[story_release.py](../scripts/story_release.py) provides `story_digest(story)` and `publication_issues(story, consent, review)` for future private-backend integration. It supports text-only drafts with exactly `title`, `body`, `display_name` and `language`; unexpected fields and blank/non-text values are rejected. The digest covers their exact text, including translations and display-name changes. Consent and editorial review must reference that digest; consent must be granted for the website, and safety/language review flags must be explicit booleans. Missing records and withdrawn consent produce fixed issue codes, without echoing private values.
+
+This is an offline preparation utility, not a publishing endpoint, access-control system, consent-verification service, content sanitizer, language validator or launch approval. An empty issue list only means the supplied records are internally consistent. A future backend must authenticate reviewers, obtain and validate informed consent, use the latest private withdrawal state, guard against replay/concurrent edits, review identifying content and minors' safety, render text safely, and separately handle media. Do not place real drafts or approval records in this public repository. The current website does not call this utility and still accepts no stories.
+
+Nine synthetic tests run through `python3 scripts/verify.py`. No invented family biographies or testimony are used. The reviewed static-package builder excludes scripts and test fixtures; that exclusion does not make repository files private.
+
 ## Verification boundaries
 
 Use synthetic labels and neutral test strings only; never invent a family biography or quote. Test unauthorized access, duplicate submissions, interrupted uploads, retries, deletion and translation-version changes before opening intake. Passing static website checks does not verify these future server-side workflows. Payments have separate gates in [payment readiness](payment-readiness.md).
