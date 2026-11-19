@@ -49,7 +49,9 @@ class Page(HTMLParser):
         self.in_style = False
         self.feed(source)
     def handle_starttag(self, tag, attrs):
-        a = dict(attrs)
+        # HTMLParser uses None for valueless attributes; HTML treats their value
+        # as empty. Normalize before string operations and diagnostic formatting.
+        a = {name: value if value is not None else "" for name, value in attrs}
         # Converting to a dict discards duplicate values. Reject ambiguity before
         # validating the surviving URL, identity, language or style attributes.
         if len(a) != len(attrs):
