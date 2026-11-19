@@ -3,15 +3,17 @@
 Updated November 19, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
-Run from the repository root with Python 3.9 or newer:
+Run the complete offline verifier from the repository root with Python 3.9+ and Node.js 18+:
 ```sh
-python3 scripts/check_site.py
-python3 -m unittest discover -s tests
+python3 scripts/verify.py
+```
+This runs static page validation, the reviewed WebP metadata audit, Python regressions and offline Node tests. It installs nothing and makes no network calls. Run packaging separately in a clean or disposable working copy:
+```sh
 python3 scripts/build_static.py
 ```
-The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
+The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 66 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 75 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
