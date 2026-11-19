@@ -27,9 +27,13 @@ def build(root):
         # Preserve the existing custom domain without creating or changing it.
         domain = root / "CNAME"
         if domain.is_symlink(): raise ValueError("Custom domain file must not be a symlink")
+        if domain.exists() and not domain.is_file():
+            raise ValueError("Custom domain file must be a regular file")
         if domain.is_file(): shutil.copyfile(domain, output / domain.name)
         marker = root / ".nojekyll"
         if marker.is_symlink(): raise ValueError("Static Pages marker must not be a symlink")
+        if marker.exists() and not marker.is_file():
+            raise ValueError("Static Pages marker must be a regular file")
         if marker.is_file(): shutil.copyfile(marker, output / marker.name)
         artwork = root / "people-for-gaza-artwork.webp"
         if artwork.is_symlink(): raise ValueError("Public artwork must not be a symlink")
