@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 64 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 66 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -154,3 +154,8 @@ Opened unchanged `ar.html` and `404.html` in temporary 320px-wide iframes using 
 Activating each page's skip link focused its main landmark. On the recovery page, the next Tab reached Return to the English homepage. Following the recovery page's Arabic home link loaded the Arabic page; browser Back returned that frame to the recovery page. These are bounded remote Chrome/iframe observations, not complete keyboard traversal, physical-device, touch, screen-reader or qualified translation testing. Opening `404.html` directly does not establish its delivery or status for missing live URLs.
 
 No defect was confirmed and no public design/source change was needed. Temporary preview fixtures were not committed or deployed; the preview server was stopped after testing. Story intake and payments remain closed.
+
+## Valueless-attribute diagnostics — November 19, 2026
+Synthetic markup containing a valueless `http-equiv` or repeated valueless `id` attributes previously crashed the checker with AttributeError/TypeError. Parsed attribute values are now normalized from None to empty strings before string operations. Two regressions failed before the fix and pass afterward: validation continues to identify an unsafe URL after valueless metadata and reports repeated empty IDs without crashing. Duplicate-attribute and existing safety checks remain active.
+
+Static validation, all 66 Python tests, four offline Node tests and a clean temporary package build passed locally. All 11 packaged public files matched their input byte-for-byte; no public source, design, artwork, domain or hosting setting changed. This fixes validator diagnostic handling, not a confirmed visitor-facing failure or full malformed-HTML conformance. Intake and payments remain inactive.
