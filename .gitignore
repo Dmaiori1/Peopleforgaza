@@ -1,0 +1,11 @@
+# Generated build output and Python caches
+/dist/
+__pycache__/
+*.py[cod]
+
+# Local environment values; only reviewed placeholders belong in examples.
+.env
+.env.*
+!.env.example
+
+# Ignore rules are convenience, not security: never put real private records here.
