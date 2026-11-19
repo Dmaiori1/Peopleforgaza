@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 18, 2026. This records bounded checks, not launch approval.
+Updated November 19, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run from the repository root with Python 3.9 or newer:
@@ -159,3 +159,10 @@ No defect was confirmed and no public design/source change was needed. Temporary
 Synthetic markup containing a valueless `http-equiv` or repeated valueless `id` attributes previously crashed the checker with AttributeError/TypeError. Parsed attribute values are now normalized from None to empty strings before string operations. Two regressions failed before the fix and pass afterward: validation continues to identify an unsafe URL after valueless metadata and reports repeated empty IDs without crashing. Duplicate-attribute and existing safety checks remain active.
 
 Static validation, all 66 Python tests, four offline Node tests and a clean temporary package build passed locally. All 11 packaged public files matched their input byte-for-byte; no public source, design, artwork, domain or hosting setting changed. This fixes validator diagnostic handling, not a confirmed visitor-facing failure or full malformed-HTML conformance. Intake and payments remain inactive.
+
+## Repeatable reviewed-image metadata audit — November 19, 2026
+Added a read-only scanner for the three reviewed WebP assets and included it in `scripts/verify.py`. It validates top-level RIFF length/chunk boundaries/zero padding and flags EXIF/XMP chunks without decoding or printing payload contents. The implementation follows the [WebP container specification](https://developers.google.com/speed/webp/docs/riff_container). Eight synthetic container/file tests cover normal chunks, odd padding, malformed/truncated containers, metadata review, missing files and symlink rejection; one additional pipeline test checks that media failures stop later verification stages. Existing image files were not rewritten.
+
+The current three assets passed. All 75 Python tests, four offline Node tests and a fresh package build passed locally; all 11 public output files matched their inputs byte-for-byte. In a disposable copy, adding a synthetic EXIF chunk to the family image caused the full verifier to fail before running test stages, without exposing the synthetic payload. No real contributor data was used, and no metadata leak was found in the current artwork.
+
+This replaces a manual inspection step with a repeatable preflight guard. It is not a full WebP decoder, detector of all metadata/identifying content, upload sanitizer, consent check or secure intake pipeline. Unknown/nested payloads and identifying pixels still need independent review. Design, public pages, artwork bytes, domain, hosting, intake and payment settings remain unchanged.
