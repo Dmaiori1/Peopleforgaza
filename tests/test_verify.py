@@ -18,6 +18,8 @@ class VerificationTests(unittest.TestCase):
         shutil.copyfile(VERIFY, self.root / "scripts" / "verify.py")
         (self.root / "scripts" / "check_site.py").write_text(
             'print("STATIC_FIXTURE_RAN")\n', encoding="utf-8")
+        (self.root / "scripts" / "check_media.py").write_text(
+            'print("MEDIA_FIXTURE_RAN")\n', encoding="utf-8")
         (self.root / "tests" / "test_fixture.py").write_text(
             'import unittest\nclass Fixture(unittest.TestCase):\n'
             '    def test_example(self):\n        self.assertTrue(True)\n', encoding="utf-8")
@@ -37,6 +39,7 @@ class VerificationTests(unittest.TestCase):
         result = self.run_verification()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("STATIC_FIXTURE_RAN", result.stdout)
+        self.assertIn("MEDIA_FIXTURE_RAN", result.stdout)
         self.assertIn("Ran 1 test", result.stderr)
         self.assertIn("NODE_FIXTURE_RAN", result.stdout)
         self.assertIn("All offline checks passed", result.stdout)
@@ -58,6 +61,15 @@ class VerificationTests(unittest.TestCase):
         result = self.run_verification()
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("FAILED", result.stderr)
+        self.assertNotIn("NODE_FIXTURE_RAN", result.stdout)
+        self.assertNotIn("All offline checks passed", result.stdout)
+
+    @unittest.skipUnless(shutil.which("node"), "Node is required for integration checks")
+    def test_media_failure_stops_before_test_stages(self):
+        (self.root / "scripts" / "check_media.py").write_text('raise SystemExit(8)\n')
+        result = self.run_verification()
+        self.assertEqual(result.returncode, 8)
+        self.assertNotIn("Ran 1 test", result.stderr)
         self.assertNotIn("NODE_FIXTURE_RAN", result.stdout)
         self.assertNotIn("All offline checks passed", result.stdout)
 
