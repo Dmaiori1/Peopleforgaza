@@ -15,6 +15,12 @@ class CheckerTests(unittest.TestCase):
             return checker.check(root)
     def test_malformed_url_reports_error(self):
         self.assertTrue(any("malformed link" in e for e in self.run_case('<a href="https://[broken">Broken</a>')))
+    def test_valueless_metadata_does_not_hide_other_validation_errors(self):
+        errors = self.run_case('<meta http-equiv><a href="javascript:fixture()">Fixture</a>')
+        self.assertTrue(any("insecure" in error for error in errors))
+    def test_valueless_duplicate_ids_report_without_crashing(self):
+        errors = self.run_case('<div id></div><span id></span>')
+        self.assertTrue(any("duplicate id" in error for error in errors))
     def test_missing_image_is_rejected(self):
         self.assertTrue(any("missing link target" in e for e in self.run_case('<img src="missing.webp" alt="Illustration">')))
     def test_missing_responsive_image_candidates_are_rejected(self):
