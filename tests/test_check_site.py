@@ -13,6 +13,14 @@ class CheckerTests(unittest.TestCase):
             root = Path(directory)
             (root / "index.html").write_text('<!doctype html><html '+html_attrs+'><main id="main"><h1>Example</h1>'+extra+'</main></html>', encoding="utf-8")
             return checker.check(root)
+    def test_null_local_paths_report_without_stopping_validation(self):
+        for href in ("%00", "/%00.html", "asset%00.webp", "%00/"):
+            with self.subTest(href=href):
+                errors = self.run_case('<a href="' + href + '">Fixture</a>'
+                                       '<a href="javascript:fixture()">Other</a>')
+                self.assertTrue(any("malformed local link path" in error for error in errors))
+                self.assertTrue(any("insecure" in error for error in errors))
+                self.assertFalse(any(href in error for error in errors))
     def test_malformed_url_reports_error(self):
         self.assertTrue(any("malformed link" in e for e in self.run_case('<a href="https://[broken">Broken</a>')))
     def test_valueless_metadata_does_not_hide_other_validation_errors(self):
