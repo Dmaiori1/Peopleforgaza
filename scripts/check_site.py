@@ -124,6 +124,9 @@ def check(root):
                     errors.append(name + ": unsupported or insecure link scheme")
                 continue
             local_path = unquote(url.path)
+            if "\0" in local_path:
+                errors.append(name + ": malformed local link path")
+                continue
             if local_path.startswith("/"):
                 target = (root / local_path.lstrip("/")).resolve()
             else:
