@@ -13,6 +13,7 @@ def main():
         return 1
     commands = (
         [sys.executable, str(root / "scripts/check_site.py")],
+        [sys.executable, str(root / "scripts/check_media.py")],
         [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
         [node, "--test", "tests/payment-calculator.test.mjs"],
     )
