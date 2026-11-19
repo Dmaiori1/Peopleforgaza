@@ -38,6 +38,17 @@ class BuildTests(unittest.TestCase):
         output = build(self.root)
         self.assertTrue((output / ".nojekyll").is_file())
         self.assertEqual((output / ".nojekyll").read_bytes(), b"")
+    def test_directories_cannot_silently_replace_pages_control_files(self):
+        for name in ("CNAME", ".nojekyll"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for page in PAGES: (root / page).write_text(HTML, encoding="utf-8")
+                control = root / name
+                control.mkdir()
+                with self.assertRaisesRegex(ValueError, "regular file"):
+                    build(root)
+                self.assertFalse((root / "dist").exists())
+                self.assertTrue(control.is_dir())
     def test_symlinked_static_pages_marker_is_rejected(self):
         with tempfile.TemporaryDirectory() as elsewhere:
             external = Path(elsewhere) / "private.txt"
