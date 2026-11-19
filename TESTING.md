@@ -11,7 +11,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output. Review and remove old output explicitly before rebuilding.
 
-The most recently executed full regression suite passed 63 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 64 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -142,3 +142,8 @@ Served a fresh copy of the reviewed static package using the temporary developme
 In a temporary iframe set to 390px CSS width (375px document client width after its scrollbar), selecting Family Stories focused the stories article and the next Tab reached Editorial & safety. The document's measured scroll width equaled its client width (375px), with no horizontal overflow in that state. Each of the six mobile navigation links measured 44px high. The family image completed loading with natural width 546px and displayed width 351px. The hidden desktop image's actual `currentSrc` selected `assets/paper-texture.webp`, with loading complete and natural width 100px, confirming narrow source selection in this preview. Network transfer savings were not measured.
 
 The temporary iframe, preview configuration and server were not committed or deployed, and the server was stopped afterward. This closes bounded local-browser focus and source-selection gaps for the current package only; it does not verify live-domain delivery, physical phones, touch, zoom, assistive technology, translations, all screen sizes, exact design fidelity or end-to-end removal/intake/payment workflows. No new defect was confirmed, and no visual/source change was needed.
+
+## Pages control file-type safeguard — November 18, 2026
+In disposable fixtures, replacing `CNAME` or `.nojekyll` with a directory previously produced an accepted package that silently omitted that control. The builder now rejects an existing non-file control with a clear error and cleans the incomplete output. A regression independently reproduced both omissions before the fix and passes afterward; original fixture directories remain intact. Existing regular files continue to be copied byte-for-byte, absent optional controls remain optional, and existing symlink rejection remains in place.
+
+Static validation, all 64 Python tests, four offline Node tests and a clean temporary package build passed locally. The current repository's controls are regular files, and all 11 public package files remained byte-identical to their local source. This fixes a packaging failure mode, not a confirmed live-domain misconfiguration. No CNAME/marker content, public page, design, DNS or hosting setting was changed; intake and payments remain inactive.
