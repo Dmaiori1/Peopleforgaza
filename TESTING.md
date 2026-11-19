@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 75 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 76 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -168,3 +168,8 @@ Added a read-only scanner for the three reviewed WebP assets and included it in 
 The current three assets passed. All 75 Python tests, four offline Node tests and a fresh package build passed locally; all 11 public output files matched their inputs byte-for-byte. In a disposable copy, adding a synthetic EXIF chunk to the family image caused the full verifier to fail before running test stages, without exposing the synthetic payload. No real contributor data was used, and no metadata leak was found in the current artwork.
 
 This replaces a manual inspection step with a repeatable preflight guard. It is not a full WebP decoder, detector of all metadata/identifying content, upload sanitizer, consent check or secure intake pipeline. Unknown/nested payloads and identifying pixels still need independent review. Design, public pages, artwork bytes, domain, hosting, intake and payment settings remain unchanged.
+
+## Null-byte URL diagnostics — November 19, 2026
+Synthetic local links containing percent-encoded null bytes previously crashed path resolution with a ValueError, stopping validation. The checker now reports a fixed malformed-path error before filesystem resolution and continues checking other links without echoing the offending path. One regression independently exercises relative, root-relative, asset and directory-shaped paths; all four cases failed before the fix and pass afterward, including detection of a later unsafe link.
+
+The complete offline verifier passed 76 Python tests and four Node tests. A clean temporary package contained 11 public files, all byte-identical to source. The current public pages contain no such malformed URLs: this fixes tooling diagnostics, not a reproduced visitor-facing failure. No public page, artwork, design, domain or hosting settings changed; intake and payments remain closed. Browser and physical-device checks were not rerun for this tooling-only change.
