@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 76 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 78 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -178,3 +178,8 @@ The complete offline verifier passed 76 Python tests and four Node tests. A clea
 Opened the unchanged Privacy and Funding Transparency pages in temporary 320px-wide iframes in remote Chrome. Both documents measured 305px client and scroll widths after the scrollbar, with no horizontal overflow in the observed states. Activating each skip link focused its main landmark; the next Tab reached the footer's Return home or Home link, respectively. Both previewed page files matched their current repository blob hashes.
 
 This was local development-preview interaction, not physical-phone, touch, zoom/text enlargement, screen-reader or live-domain testing. No defect was confirmed and no public source/design change was needed. Temporary iframe fixtures were not committed or deployed, and the preview server was stopped after testing. Story intake and payments remain closed.
+
+## Automated public-navigation contracts — November 19, 2026
+Two tests now read the six current public pages and verify regular-page reachability from the English homepage, a route home from every page (including recovery), and matching reciprocal English/Arabic/x-default alternate links. These preserve previously observed navigation behavior rather than claiming a new visitor-facing defect was fixed. The complete offline verifier passed 78 Python tests and four Node tests.
+
+In separate disposable copies, changing the Arabic alternate to point to the English document and removing the Privacy page's outgoing links each caused the new tests to fail. The original pages were not edited. These are static navigation-graph and metadata checks, not browser history/focus, screen-reader, physical-device, translation-quality or live-delivery tests. Design, public content, hosting, intake and payment settings remain unchanged.
