@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 78 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 79 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -183,3 +183,8 @@ This was local development-preview interaction, not physical-phone, touch, zoom/
 Two tests now read the six current public pages and verify regular-page reachability from the English homepage, a route home from every page (including recovery), and matching reciprocal English/Arabic/x-default alternate links. These preserve previously observed navigation behavior rather than claiming a new visitor-facing defect was fixed. The complete offline verifier passed 78 Python tests and four Node tests.
 
 In separate disposable copies, changing the Arabic alternate to point to the English document and removing the Privacy page's outgoing links each caused the new tests to fail. The original pages were not edited. These are static navigation-graph and metadata checks, not browser history/focus, screen-reader, physical-device, translation-quality or live-delivery tests. Design, public content, hosting, intake and payment settings remain unchanged.
+
+## Skip-link regression contract — November 20, 2026
+The public-navigation suite now checks that the first anchor on each of the six public pages remains its skip link, targets an existing same-document fragment, and retains tabindex="-1" on that content destination. This protects the existing programmatic-focus markup without altering public pages or claiming a new visitor-facing fix.
+
+The complete offline verifier passed 79 Python tests and four Node tests. Removing the Privacy page target's focusability in a disposable copy caused the new check to fail; the real page was unchanged. This is a source-level regression guard, not a fresh browser, keyboard, screen-reader or physical-device test. Design, public content, hosting, story intake and payment settings remain unchanged.
