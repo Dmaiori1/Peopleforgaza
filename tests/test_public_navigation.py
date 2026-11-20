@@ -14,10 +14,15 @@ class Navigation(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.links, self.alternates = [], []
         self.language = None
+        self.first_anchor, self.targets = None, {}
         self.feed(source)
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        if "id" in values:
+            self.targets[values["id"]] = values
+        if tag == "a" and self.first_anchor is None:
+            self.first_anchor = values
         if tag == "html":
             self.language = values.get("lang")
         if tag == "a" and values.get("href"):
@@ -45,6 +50,19 @@ class PublicNavigationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.pages = {name: Navigation((ROOT / name).read_text(encoding="utf-8"))
                      for name in PUBLIC_PAGES}
+
+    def test_skip_links_target_programmatically_focusable_content(self):
+        for name, page in self.pages.items():
+            with self.subTest(page=name):
+                anchor = page.first_anchor
+                self.assertIsNotNone(anchor)
+                self.assertTrue({"skip", "skip-link"} & set(anchor.get("class", "").split()))
+                destination = urlsplit(anchor.get("href", ""))
+                self.assertFalse(destination.scheme or destination.netloc or destination.path)
+                self.assertTrue(destination.fragment)
+                target = page.targets.get(unquote(destination.fragment))
+                self.assertIsNotNone(target)
+                self.assertEqual(target.get("tabindex"), "-1")
 
     def test_regular_pages_are_reachable_and_every_page_has_a_route_home(self):
         graph = {name: {target for href in page.links
