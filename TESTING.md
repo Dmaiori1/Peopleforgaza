@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 19, 2026. This records bounded checks, not launch approval.
+Updated November 25, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run the complete offline verifier from the repository root with Python 3.9+ and Node.js 18+:
@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 79 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 80 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -188,3 +188,8 @@ In separate disposable copies, changing the Arabic alternate to point to the Eng
 The public-navigation suite now checks that the first anchor on each of the six public pages remains its skip link, targets an existing same-document fragment, and retains tabindex="-1" on that content destination. This protects the existing programmatic-focus markup without altering public pages or claiming a new visitor-facing fix.
 
 The complete offline verifier passed 79 Python tests and four Node tests. Removing the Privacy page target's focusability in a disposable copy caused the new check to fail; the real page was unchanged. This is a source-level regression guard, not a fresh browser, keyboard, screen-reader or physical-device test. Design, public content, hosting, story intake and payment settings remain unchanged.
+
+## Referrer-policy regression contract — November 25, 2026
+A new source-level test checks all six public pages for a single no-referrer metadata declaration and rejects element-level referrerpolicy overrides other than no-referrer. This protects existing privacy markup; no current visitor-facing defect was found or public page changed.
+
+The full offline verifier passed 80 Python tests and four Node tests. In separate disposable copies, removing the Privacy page declaration and adding an unsafe-url anchor override each caused the new test to fail. A clean package contained the same 11 public files, byte-identical to source. These are markup/package checks, not outbound request-header capture, browser or physical-device evidence; imported stylesheets, server headers and actual request behavior remain outside this test. Design, artwork, wording, domain, hosting, story intake and payments remain unchanged.
