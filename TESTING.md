@@ -193,3 +193,8 @@ The complete offline verifier passed 79 Python tests and four Node tests. Removi
 A new source-level test checks all six public pages for a single no-referrer metadata declaration and rejects element-level referrerpolicy overrides other than no-referrer. This protects existing privacy markup; no current visitor-facing defect was found or public page changed.
 
 The full offline verifier passed 80 Python tests and four Node tests. In separate disposable copies, removing the Privacy page declaration and adding an unsafe-url anchor override each caused the new test to fail. A clean package contained the same 11 public files, byte-identical to source. These are markup/package checks, not outbound request-header capture, browser or physical-device evidence; imported stylesheets, server headers and actual request behavior remain outside this test. Design, artwork, wording, domain, hosting, story intake and payments remain unchanged.
+
+## Narrow editorial-page keyboard preview — November 25, 2026
+Opened the unchanged Editorial & Safety page in a temporary 320px-wide iframe in remote Chrome. Its measured document client and scroll widths both equaled 305px after the scrollbar, with no horizontal overflow in that state. Pressing Enter on the skip link focused main; the next Tab reached Return home. The previewed HTML matched the current repository blob before use.
+
+This is bounded development-preview evidence, not live-domain, physical-device, touch, zoom/text-enlargement, screen-reader or full keyboard-traversal verification. No defect was confirmed and no public page/design change was needed. The temporary iframe was not committed or deployed, and the preview server was stopped afterward. Intake, payments and hosting settings remain unchanged.
