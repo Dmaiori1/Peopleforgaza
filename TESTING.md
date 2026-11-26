@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 25, 2026. This records bounded checks, not launch approval.
+Updated November 26, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run the complete offline verifier from the repository root with Python 3.9+ and Node.js 18+:
@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 80 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 81 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -198,3 +198,8 @@ The full offline verifier passed 80 Python tests and four Node tests. In separat
 Opened the unchanged Editorial & Safety page in a temporary 320px-wide iframe in remote Chrome. Its measured document client and scroll widths both equaled 305px after the scrollbar, with no horizontal overflow in that state. Pressing Enter on the skip link focused main; the next Tab reached Return home. The previewed HTML matched the current repository blob before use.
 
 This is bounded development-preview evidence, not live-domain, physical-device, touch, zoom/text-enlargement, screen-reader or full keyboard-traversal verification. No defect was confirmed and no public page/design change was needed. The temporary iframe was not committed or deployed, and the preview server was stopped afterward. Intake, payments and hosting settings remain unchanged.
+
+## HTML read-failure diagnostics — November 26, 2026
+The static checker previously aborted with an uncaught exception when a root HTML entry contained invalid UTF-8, was a directory, or could not be read. One regression reproduced all three read-failure variants before the fix. The checker now records a fixed per-file failure and continues validating readable pages, while still returning failure overall. The denied-read variant uses a synthetic PermissionError injection rather than an operating-system permission claim.
+
+The full offline verifier passed 81 Python tests and four Node tests. A separate invalid-UTF-8 CLI fixture returned failure, also reported a later unsafe URL, and emitted neither a traceback nor the synthetic exception/content marker. A clean package retained 11 public files byte-identical to source. This fixes development-tool diagnostics; the current public pages are readable UTF-8, and no visitor-facing defect was reproduced. Design, public content, artwork, domain, hosting, story intake and payments remain unchanged. Browser/device tests were not rerun for this tooling-only change.
