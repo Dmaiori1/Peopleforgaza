@@ -3,11 +3,36 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 spec = importlib.util.spec_from_file_location("check_site", Path(__file__).resolve().parents[1] / "scripts/check_site.py")
 checker = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checker)
 
 class CheckerTests(unittest.TestCase):
+    def test_page_read_failures_report_without_stopping_other_checks(self):
+        for failure in ("encoding", "directory", "permission"):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                bad = root / "bad.html"
+                (root / "index.html").write_text(
+                    '<html lang="en"><main><h1>Fixture</h1>'
+                    '<a href="javascript:fixture()">Other</a></main></html>', encoding="utf-8")
+                if failure == "directory":
+                    bad.mkdir()
+                else:
+                    bad.write_bytes(b"\xffPRIVATE_FIXTURE" if failure == "encoding" else b"fixture")
+                original_read = Path.read_text
+                def read(path, *args, **kwargs):
+                    if path == bad and failure == "permission":
+                        raise PermissionError("PRIVATE_FIXTURE")
+                    return original_read(path, *args, **kwargs)
+                with patch.object(Path, "read_text", read):
+                    errors = checker.check(root)
+                self.assertIn("bad.html: unable to read UTF-8 HTML file", errors)
+                self.assertTrue(any("insecure" in error for error in errors))
+                self.assertNotIn("PRIVATE_FIXTURE", str(errors))
+                self.assertTrue(bad.exists())
+
     def run_case(self, extra="", html_attrs='lang="en"'):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
