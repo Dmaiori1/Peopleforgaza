@@ -104,7 +104,14 @@ def check(root):
     paths = sorted(root.glob("*.html"))
     errors = []
     if not paths: return ["no root HTML pages found"]
-    pages = {p.resolve(): Page(p.read_text(encoding="utf-8")) for p in paths}
+    pages = {}
+    for path in paths:
+        try:
+            source = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            errors.append(path.name + ": unable to read UTF-8 HTML file")
+            continue
+        pages[path.resolve()] = Page(source)
     for path, page in pages.items():
         name = path.name
         errors.extend(name + ": " + e for e in page.errors)
