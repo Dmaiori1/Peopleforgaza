@@ -1,6 +1,6 @@
 # Verification record
 
-Updated November 26, 2026. This records bounded checks, not launch approval.
+Updated November 27, 2026. This records bounded checks, not launch approval.
 
 ## Automated checks
 Run the complete offline verifier from the repository root with Python 3.9+ and Node.js 18+:
@@ -13,7 +13,7 @@ python3 scripts/build_static.py
 ```
 The build refuses existing dist output; do not delete unreviewed output just to make it pass.
 
-The most recently executed full regression suite passed 81 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
+The most recently executed full regression suite passed 82 Python tests and four offline Node tests. Coverage includes local links and image sources, fragments, basic document structure, Arabic/ regional Arabic direction, review gates for active content and data collection, and static packaging safeguards. This does not establish comprehensive accessibility, security, or browser compatibility.
 
 On November 12, a fresh copy of all five public pages and three artwork assets passed static checks, the full 24-test suite, and packaging. Every staged page and asset was byte-identical to its source. Embedded CSS literal image URLs were included in validation.
 
@@ -208,3 +208,9 @@ The full offline verifier passed 81 Python tests and four Node tests. A separate
 In the local development preview in remote Chrome, sequential native Tab input reached all 12 visible desktop-homepage links: the skip link, seven artwork navigation/story links, and four footer links. Activating the final Arabic link with Enter loaded the Arabic page. Five further Tab presses reached its skip link, two header links, and two footer links. Shift+Tab returned to English homepage; Enter loaded index.html. Observed focused elements matched those destinations, with no focus trap in these sequences.
 
 The two previewed HTML files matched their current repository blob hashes before testing. This records keyboard reachability and language-page navigation only; it does not establish focus contrast/visibility, complete activation of every link, mobile/physical-device or screen-reader behavior, translation accuracy, current live-domain delivery, or exact design fidelity. No defect was confirmed and no public-source change was needed. The preview server was stopped afterward. Public design, content, artwork, domain, hosting, story intake and payments remain unchanged.
+
+
+## Handled package-copy failure regression — November 27, 2026
+A new synthetic packaging test writes partial output and raises an OSError during the second page copy. It verifies that the handled failure removes the incomplete dist directory, preserves every source page byte, and permits a clean retry with the exact four fixture pages. In a disposable copy, disabling cleanup made the new test fail at the partial-output assertion. The existing builder already handled this case correctly; this adds regression coverage, not a new defect fix.
+
+The full offline verifier passed 82 Python tests and four Node tests. A clean temporary package retained 11 public files byte-identical to source. This covers a caught copy exception, not process termination, power loss, concurrent builds or live deployment recovery. No public page, design, artwork, domain, hosting, intake or payment setting changed; browser/device checks were not rerun for this test-only change.
