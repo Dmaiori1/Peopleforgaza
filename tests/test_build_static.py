@@ -3,7 +3,9 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import build_static
 from build_static import build
 
 PAGES = ("index.html", "ar.html", "privacy.html", "editorial-policy.html")
@@ -88,6 +90,25 @@ class BuildTests(unittest.TestCase):
         (output / "keep.txt").write_text("keep")
         with self.assertRaises(ValueError): build(self.root)
         self.assertEqual((output/"keep.txt").read_text(), "keep")
+    def test_handled_copy_failure_removes_partial_output_and_allows_retry(self):
+        original = {name: (self.root / name).read_bytes() for name in PAGES}
+        copyfile = build_static.shutil.copyfile
+        copied = []
+        def interrupted_copy(source, destination):
+            copied.append(Path(source).name)
+            if len(copied) == 2:
+                Path(destination).write_bytes(b"partial synthetic output")
+                raise OSError("synthetic copy interruption")
+            return copyfile(source, destination)
+        with patch.object(build_static.shutil, "copyfile", side_effect=interrupted_copy):
+            with self.assertRaisesRegex(OSError, "^synthetic copy interruption$"):
+                build(self.root)
+        self.assertEqual(copied, list(PAGES[:2]))
+        self.assertFalse((self.root / "dist").exists())
+        self.assertEqual({name: (self.root / name).read_bytes() for name in PAGES}, original)
+        output = build(self.root)
+        self.assertEqual(sorted(path.name for path in output.iterdir()), sorted(PAGES))
+        self.assertEqual({name: (output / name).read_bytes() for name in PAGES}, original)
     def test_recovery_page_is_packaged_with_working_root_links(self):
         page = HTML.replace("</main>", '<a href="/index.html">Home</a><a href="/ar.html" lang="ar">العربية</a></main>')
         (self.root / "404.html").write_text(page, encoding="utf-8")
